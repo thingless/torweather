@@ -72,3 +72,5 @@ def main():
             "nickname":node.get('nickname'),
         })
     #find nodes whos down/up state has changed
+    published = parse_time_str(data['relays_published'])
+    
