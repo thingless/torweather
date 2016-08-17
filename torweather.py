@@ -57,6 +57,7 @@ def main():
             fingerprint = node['fingerprint']
             email = re.search(r'[\w\.-]+@[\w\.-]+', node.get('contact') or '')  #TODO: make this less shit
             email = email and email.group(0)
+            assert node['last_seen'], 'How has a node never been seen?'
             conn.execute('''
                 INSERT OR REPLACE INTO nodes
                 (fingerprint, last_seen, email, first_seen, consensus_weight, contact, nickname, unsubscribed, last_alert_last_seen) VALUES (
@@ -82,7 +83,7 @@ def main():
     #find nodes whos down/up state has changed
     published = to_timestamp(parse_time_str(data['relays_published']))
     for node in conn.execute("SELECT * FROM nodes WHERE last_seen < :threshold AND "
-                             "last_alert_last_seen <> last_seen;", {
+                             "(last_alert_last_seen IS NULL OR last_alert_last_seen <> last_seen);", {
                                 'threshold': published - NODE_DOWN_ALERT_TIMEOUT,
                             }):
         print node
