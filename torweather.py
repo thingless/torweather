@@ -2,8 +2,8 @@ import sqlite3
 import requests
 import dateutil.parser
 import json
-from time import mktime
-from datetime import datetime
+import time
+import datetime
 import re
 import os
 
@@ -14,14 +14,14 @@ import os
 
 #dateutil.parser.parse("2016-07-06 09:00:00")
 
-def parse_time_str(time):
-    return dateutil.parser.parse(time)
+def parse_time_str(tim):
+    return dateutil.parser.parse(tim)
 
-def to_timestamp(datetime):
-    return mktime(datetime.timetuple())
+def to_timestamp(dt):
+    return time.mktime(dt.timetuple())
 
 def from_timestamp(timestamp):
-    return datetime.fromtimestamp(int(timestamp))
+    return datetime.datetime.fromtimestamp(int(timestamp))
 
 def scrape_email(text):
     pass
@@ -29,7 +29,7 @@ def scrape_email(text):
 def main():
     #get json file
     if os.environ['DEBUG']:
-        with open('mock_data.json') as data_file:    
+        with open('mock_data.json') as data_file:
             data = json.load(data_file)
     else:
         data = equests.get('https://onionoo.torproject.org/details').json()
@@ -53,7 +53,7 @@ def main():
         email = re.search(r'[\w\.-]+@[\w\.-]+', node.get('contact',''))
         email = email and email.group(0)
         conn.execute('''
-            INSERT OR REPLACE INTO nodes 
+            INSERT OR REPLACE INTO nodes
             (fingerprint, last_seen, email, first_seen, consensus_weight, contact, nickname, unsubscribed) values (
                 :fingerprint,
                 :last_seen,
