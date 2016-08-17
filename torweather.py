@@ -9,7 +9,7 @@ import os
 
 from mailer import alert
 
-NODE_DOWN_ALERT_TIMEOUT = 24*60*60 #How long to wait before sending node down alert
+NODE_DOWN_ALERT_TIMEOUT = 48*60*60 #How long to wait before sending node down alert
 
 #import requests
 
