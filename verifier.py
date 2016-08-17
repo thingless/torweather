@@ -11,6 +11,10 @@ def generate(msg):
     return hmac.new(KEY, msg).hexdigest()
 
 def verify(sec, msg):
+    if isinstance(msg, unicode):
+        msg = msg.encode('utf-8')
+    if isinstance(sec, unicode):
+        sec = sec.encode('utf-8')
     return hmac.compare_digest(generate(msg), sec)
 
 if __name__ == '__main__':
