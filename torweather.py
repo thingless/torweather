@@ -32,7 +32,7 @@ def main():
         with open('mock_data.json') as data_file:
             data = json.load(data_file)
     else:
-        data = equests.get('https://onionoo.torproject.org/details').json()
+        data = requests.get('https://onionoo.torproject.org/details').json()
     #connect and init db if not inited
     conn = sqlite3.connect('torweather.db', row_factory=sqlite3.Row)
     try:
