@@ -11,9 +11,9 @@ import logging
 from mailer import alert_down
 
 NODE_DOWN_ALERT_TIMEOUT = 48*60*60 #How long to wait before sending node down alert
-logger = logging.getLogger(__name__)
+LAST_SEEN_HORIZON = 1467687600 #last_seen before this time stamp will not be emailed
 
-NODE_DOWN_ALERT_TIMEOUT = 48*3600  #How long to wait before sending node down alert
+logger = logging.getLogger(__name__)
 
 def parse_time_str(tim):
     return dateutil.parser.parse(tim)
@@ -100,8 +100,11 @@ def main():
         for node in conn.execute("SELECT n.* FROM nodes n "
                                  "LEFT OUTER JOIN unsubscribe u ON u.fingerprint = n.fingerprint "
                                  "WHERE last_seen < :threshold AND u.fingerprint IS NULL AND "
+                                 "n.last_seen > :last_seen_horizon AND "
+                                 "n.email IS NOT NULL AND "
                                  "(last_alert_last_seen IS NULL OR last_alert_last_seen <> last_seen);", {
                                     'threshold': published - NODE_DOWN_ALERT_TIMEOUT,
+                                    'last_seen_horizon': LAST_SEEN_HORIZON,
                                 }):
             # Send the email!
             alert_down(node)

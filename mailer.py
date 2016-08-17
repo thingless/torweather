@@ -33,7 +33,7 @@ def alert_down(node):
     parms['unsubscribe_url'] = "http://www.torweather.org/unsubscribe?hmac={}&fingerprint={}".format(verifier.generate(parms['fingerprint']), parms['fingerprint'])
     if not os.environ.get('PROD'):
         parms['email'] = 'torweather@moreorcs.com'
-    logger.info('Would email about node %r', dict(parms))
+    print 'Would email about node %r', dict(parms)
     return
     return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
                          auth=("api", API_KEY),
