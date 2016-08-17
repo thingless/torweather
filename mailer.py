@@ -7,7 +7,7 @@ import verifier
 logger = logging.getLogger(__name__)
 
 DOMAIN_NAME = 'torweather.org'
-API_KEY = 'key-b29864d1ebbd7dc163657392e622a063'
+API_KEY = os.environ.get('MAILGUN_KEY')
 
 EMAIL_DOWN_SUBJECT = '[Tor Weather] Node Down!'
 EMAIL_DOWN_BODY = '''
@@ -31,15 +31,15 @@ email_down_template = template.Template(EMAIL_DOWN_BODY)
 def alert_down(node):
     parms = dict(node)
     parms['unsubscribe_url'] = "http://www.torweather.org/unsubscribe?hmac={}&fingerprint={}".format(verifier.generate(parms['fingerprint']), parms['fingerprint'])
-    if not os.environ.get('PROD'):
-        parms['email'] = 'torweather@moreorcs.com'
-    print 'Would email about node %r', dict(parms)
-    return
-    return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
-                         auth=("api", API_KEY),
-                         data={
-                            "from": "Tor Weather <noreply@{}>".format(DOMAIN_NAME),
-                            "to": [parms['email']],
-                            "subject": EMAIL_DOWN_SUBJECT,
-                            "text": email_down_template.generate(**parms)
-                         })
+    parms['email'] = 'klafter719r@gmail.com'  # TODO XXX FIXME
+    logger.info('Emailing node_down %', parms)
+    if os.environ.get('PROD'):
+        assert API_KEY
+        return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
+                             auth=("api", API_KEY),
+                             data={
+                                "from": "Tor Weather <noreply@{}>".format(DOMAIN_NAME),
+                                "to": [parms['email']],
+                                "subject": EMAIL_DOWN_SUBJECT,
+                                "text": email_down_template.generate(**parms)
+                             })
