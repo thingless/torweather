@@ -69,7 +69,7 @@ def main():
         logger.info("Updating database of nodes from onionoo data...")
         for node in data['relays']:
             fingerprint = node['fingerprint']
-            email = re.search(r'[\w\.-]+@[\w\.-]+', node.get('contact') or '')  #TODO: make this less shit
+            email = re.search(r'[\w\.+-]+@[\w\.+-]+\.[\w\.+-]+', node.get('contact') or '')  #TODO: make this less shit
             email = email and email.group(0)
             assert node['last_seen'], 'How has a node never been seen?'
             conn.execute('''
