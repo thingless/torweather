@@ -45,7 +45,7 @@ def main():
     try:
         conn.execute("SELECT COUNT(1) FROM nodes;") #if there is not a nodes table this will fail
     except sqlite3.OperationalError:
-        logger.info("Creating database table...")
+        logger.info("Creating database table 'nodes'...")
         conn.execute('''CREATE TABLE nodes (
             fingerprint TEXT PRIMARY KEY,
             last_seen INTEGER,
@@ -54,8 +54,13 @@ def main():
             consensus_weight REAL,
             contact TEXT,
             nickname TEXT,
-            unsubscribed INTEGER,
             last_alert_last_seen INTEGER);''')
+
+    try:
+        conn.execute("SELECT COUNT(1) FROM unsubscribe;")
+    except sqlite3.OperationalError:
+        logger.info("Creating database table 'unsubscribe'...")
+        conn.execute('CREATE TABLE unsubscribe (fingerprint TEXT PRIMARY KEY);')
 
     #update or add new records
     with conn:
@@ -67,7 +72,7 @@ def main():
             assert node['last_seen'], 'How has a node never been seen?'
             conn.execute('''
                 INSERT OR REPLACE INTO nodes
-                (fingerprint, last_seen, email, first_seen, consensus_weight, contact, nickname, unsubscribed, last_alert_last_seen) VALUES (
+                (fingerprint, last_seen, email, first_seen, consensus_weight, contact, nickname, last_alert_last_seen) VALUES (
                     :fingerprint,
                     :last_seen,
                     :email,
@@ -75,7 +80,6 @@ def main():
                     :consensus_weight,
                     :contact,
                     :nickname,
-                    (select unsubscribed from nodes where fingerprint = :fingerprint),
                     (select last_alert_last_seen from nodes where fingerprint = :fingerprint)
                 );
             ''', {
@@ -93,7 +97,9 @@ def main():
     published = to_timestamp(parse_time_str(data['relays_published']))
     logger.info("Checking which nodes to alert...")
     with conn:
-        for node in conn.execute("SELECT * FROM nodes WHERE last_seen < :threshold AND "
+        for node in conn.execute("SELECT n.* FROM nodes n "
+                                 "LEFT OUTER JOIN unsubscribe u ON u.fingerprint = n.fingerprint "
+                                 "WHERE last_seen < :threshold AND u.fingerprint IS NULL AND "
                                  "(last_alert_last_seen IS NULL OR last_alert_last_seen <> last_seen);", {
                                     'threshold': published - NODE_DOWN_ALERT_TIMEOUT,
                                 }):
