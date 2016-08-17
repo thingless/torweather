@@ -49,39 +49,45 @@ def main():
             consensus_weight REAL,
             contact TEXT,
             nickname TEXT,
-            unsubscribed INTEGER DEFAULT 0,
+            unsubscribed INTEGER,
             last_alert_last_seen INTEGER);''')
     #update or add new records
-    for node in data['relays']:
-        fingerprint = node['fingerprint']
-        email = re.search(r'[\w\.-]+@[\w\.-]+', node.get('contact',''))
-        email = email and email.group(0)
-        conn.execute('''
-            INSERT OR REPLACE INTO nodes
-            (fingerprint, last_seen, email, first_seen, consensus_weight, contact, nickname, unsubscribed) values (
-                :fingerprint,
-                :last_seen,
-                :email,
-                :first_seen,
-                :consensus_weight,
-                :contact,
-                :nickname,
-                (select unsubscribed from nodes where fingerprint = :fingerprint),
-                (select last_alert_last_seen from nodes where fingerprint = :fingerprint)
-            );
-        ''', {
-            "fingerprint":fingerprint,
-            "last_seen":to_timestamp(parse_time_str(node['last_seen'])),
-            "email":email or None,
-            "first_seen":to_timestamp(parse_time_str(node['first_seen'])),
-            "consensus_weight":node.get('consensus_weight'),
-            "contact":node.get('contact'),
-            "nickname":node.get('nickname'),
-        })
+    with conn:
+        for node in data['relays']:
+            fingerprint = node['fingerprint']
+            email = re.search(r'[\w\.-]+@[\w\.-]+', node.get('contact') or '')  #TODO: make this less shit
+            email = email and email.group(0)
+            conn.execute('''
+                INSERT OR REPLACE INTO nodes
+                (fingerprint, last_seen, email, first_seen, consensus_weight, contact, nickname, unsubscribed, last_alert_last_seen) VALUES (
+                    :fingerprint,
+                    :last_seen,
+                    :email,
+                    :first_seen,
+                    :consensus_weight,
+                    :contact,
+                    :nickname,
+                    (select unsubscribed from nodes where fingerprint = :fingerprint),
+                    (select last_alert_last_seen from nodes where fingerprint = :fingerprint)
+                );
+            ''', {
+                "fingerprint":fingerprint,
+                "last_seen":to_timestamp(parse_time_str(node['last_seen'])),
+                "email":email or None,
+                "first_seen":to_timestamp(parse_time_str(node['first_seen'])),
+                "consensus_weight":node.get('consensus_weight'),
+                "contact":node.get('contact'),
+                "nickname":node.get('nickname'),
+            })
     #find nodes whos down/up state has changed
-    published = parse_time_str(data['relays_published'])
-    for node in conn.execute("SELECT * FROM nodes WHERE last_seen < :last_seen;", {'last_seen':published - NODE_DOWN_ALERT_TIMEOUT}):
+    published = to_timestamp(parse_time_str(data['relays_published']))
+    for node in conn.execute("SELECT * FROM nodes WHERE last_seen < :threshold AND "
+                             "last_alert_last_seen <> last_seen;", {
+                                'threshold': published - NODE_DOWN_ALERT_TIMEOUT,
+                            }):
         print node
+        #alert(node)
+        conn.execute("UPDATE nodes SET last_alert_last_seen = last_seen;")
 
 if __name__ == "__main__":
     main();
