@@ -5,7 +5,7 @@ import json
 from time import mktime
 from datetime import datetime
 import re
-
+import os
 
 #import requests
 
@@ -28,9 +28,11 @@ def scrape_email(text):
 
 def main():
     #get json file
-    with open('mock_data.json') as data_file:    
-        data = json.load(data_file)
-    #data = equests.get('https://onionoo.torproject.org/details').json()
+    if os.environ['DEBUG']:
+        with open('mock_data.json') as data_file:    
+            data = json.load(data_file)
+    else:
+        data = equests.get('https://onionoo.torproject.org/details').json()
     #connect and init db if not inited
     conn = sqlite3.connect('torweather.db')
     try:
@@ -73,4 +75,9 @@ def main():
         })
     #find nodes whos down/up state has changed
     published = parse_time_str(data['relays_published'])
-    
+    nodes = conn.execute("SELECT * FROM nodes;")
+    for node in conn.execute("SELECT * FROM nodes;"):
+        print node
+
+if __name__ == "__main__":
+    main();
