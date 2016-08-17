@@ -10,7 +10,6 @@ import logging
 
 from mailer import alert_down
 
-NODE_DOWN_ALERT_TIMEOUT = 48*60*60 #How long to wait before sending node down alert
 logger = logging.getLogger(__name__)
 
 NODE_DOWN_ALERT_TIMEOUT = 48*3600  #How long to wait before sending node down alert
