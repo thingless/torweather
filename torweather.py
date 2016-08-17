@@ -36,7 +36,8 @@ def main():
     else:
         data = requests.get('https://onionoo.torproject.org/details').json()
     #connect and init db if not inited
-    conn = sqlite3.connect('torweather.db', row_factory=sqlite3.Row)
+    conn = sqlite3.connect('torweather.db')
+    conn.row_factory = sqlite3.Row
     try:
         conn.execute("SELECT * FROM nodes;") #if there is not a nodes table this will fail
     except sqlite3.OperationalError:
