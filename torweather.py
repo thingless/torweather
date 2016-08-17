@@ -28,7 +28,7 @@ def scrape_email(text):
 
 def main():
     #get json file
-    if os.environ['DEBUG']:
+    if os.environ.get('DEBUG'):
         with open('mock_data.json') as data_file:
             data = json.load(data_file)
     else:
