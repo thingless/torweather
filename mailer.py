@@ -35,11 +35,14 @@ def alert_down(node):
     logger.info('Emailing node_down %r', parms)
     if os.environ.get('PROD'):
         assert API_KEY
-        return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
-                             auth=("api", API_KEY),
-                             data={
-                                "from": "Tor Weather <noreply@{}>".format(DOMAIN_NAME),
-                                "to": [parms['email']],
-                                "subject": EMAIL_DOWN_SUBJECT,
-                                "text": email_down_template.generate(**parms)
-                             })
+        try:
+            return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
+                                 auth=("api", API_KEY),
+                                 data={
+                                    "from": "Tor Weather <noreply@{}>".format(DOMAIN_NAME),
+                                    "to": [parms['email']],
+                                    "subject": EMAIL_DOWN_SUBJECT,
+                                    "text": email_down_template.generate(**parms)
+                                 })
+        except Exception as e:
+            logger.exception("Failed to send email :(")
