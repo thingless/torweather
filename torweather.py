@@ -7,6 +7,8 @@ import datetime
 import re
 import os
 
+NODE_DOWN_ALERT_TIMEOUT = 24*60*60 #How long to wait before sending node down alert
+
 #import requests
 
 #r = requests.get('https://api.github.com/events')
@@ -75,7 +77,7 @@ def main():
         })
     #find nodes whos down/up state has changed
     published = parse_time_str(data['relays_published'])
-    for node in conn.execute("SELECT * FROM nodes;"):
+    for node in conn.execute("SELECT * FROM nodes WHERE last_seen < :last_seen;", {'last_seen':published - NODE_DOWN_ALERT_TIMEOUT}):
         print node
 
 if __name__ == "__main__":
