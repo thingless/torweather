@@ -49,7 +49,8 @@ def main():
             consensus_weight REAL,
             contact TEXT,
             nickname TEXT,
-            unsubscribed INTEGER DEFAULT 0);''')
+            unsubscribed INTEGER DEFAULT 0,
+            last_alert_last_seen INTEGER);''')
     #update or add new records
     for node in data['relays']:
         fingerprint = node['fingerprint']
@@ -65,7 +66,8 @@ def main():
                 :consensus_weight,
                 :contact,
                 :nickname,
-                (select unsubscribed from nodes where fingerprint = :fingerprint)
+                (select unsubscribed from nodes where fingerprint = :fingerprint),
+                (select last_alert_last_seen from nodes where fingerprint = :fingerprint)
             );
         ''', {
             "fingerprint":fingerprint,
