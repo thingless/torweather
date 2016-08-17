@@ -13,7 +13,7 @@ from mailer import alert_down
 NODE_DOWN_ALERT_TIMEOUT = 48*60*60 #How long to wait before sending node down alert
 
 # TODO: Set this to the day we deploy the project
-LAST_SEEN_HORIZON = 1467687600 #last_seen before this time stamp will not be emailed
+LAST_SEEN_HORIZON = 1471410499 #last_seen before this time stamp will not be emailed
 
 logger = logging.getLogger(__name__)
 

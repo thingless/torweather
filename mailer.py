@@ -32,7 +32,7 @@ def alert_down(node):
     parms = dict(node)
     parms['unsubscribe_url'] = "http://www.torweather.org/unsubscribe?hmac={}&fingerprint={}".format(verifier.generate(parms['fingerprint']), parms['fingerprint'])
     parms['email'] = 'klafter719r@gmail.com'  # TODO XXX FIXME
-    logger.info('Emailing node_down %', parms)
+    logger.info('Emailing node_down %r', parms)
     if os.environ.get('PROD'):
         assert API_KEY
         return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
