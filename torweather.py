@@ -8,7 +8,7 @@ import re
 import os
 import logging
 
-from mailer import alert
+from mailer import alert_down
 
 NODE_DOWN_ALERT_TIMEOUT = 48*60*60 #How long to wait before sending node down alert
 logger = logging.getLogger(__name__)
@@ -98,7 +98,7 @@ def main():
                                     'threshold': published - NODE_DOWN_ALERT_TIMEOUT,
                                 }):
             # Send the email!
-            alert(node)
+            alert_down(node)
 
             # Mark us as having alerted on this node
             conn.execute("UPDATE nodes SET last_alert_last_seen = last_seen WHERE fingerprint = :fingerprint;",

@@ -1,6 +1,7 @@
 import os
 import requests
 import logging
+from tornado import template
 
 logger = logging.getLogger(__name__)
 
@@ -18,23 +19,27 @@ https://atlas.torproject.org/#details/{{fingerprint}}
 
 You can unsubscribe from these reports at any time by visiting the following url:
 
-https://weather.torproject.org/unsubscribe/Ce2GoUVS8UHC3itiLxDVvNKx/
+{{unsubscribe_url}}
 
 The original Tor Weather was decommissioned by the Tor project and this replacement is now maintained independently. You can learn more here:
 
 https://github.com/thingless/torweather/blob/master/README.md
 '''
 
-def alert(node):
-    if not os.environ.get('PROD'):
-        logger.info('Would email about node %r', dict(node))
-        return
+email_down_template = template.Template(EMAIL_DOWN_BODY)
 
+def alert_down(node):
+    parms = dict(node)
+    parms['unsubscribe_url'] =` None
+    if not os.environ.get('PROD'):
+        parms['email'] = 'torweather@moreorcs.com'
+    logger.info('Would email about node %r', dict(parms))
+    return
     return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
                          auth=("api", API_KEY),
                          data={
                             "from": "Tor Weather <noreply@{}>".format(DOMAIN_NAME),
-                            "to": [""],  # TODO
-                            "subject": "Hello",
-                            "text": "Testing some Mailgun awesomness!"
+                            "to": [parms['email']],
+                            "subject": EMAIL_DOWN_SUBJECT,
+                            "text": email_down_template.generate(**parms)
                          })
