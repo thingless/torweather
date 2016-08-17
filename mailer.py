@@ -2,6 +2,7 @@ import os
 import requests
 import logging
 from tornado import template
+import verifier
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ email_down_template = template.Template(EMAIL_DOWN_BODY)
 
 def alert_down(node):
     parms = dict(node)
-    parms['unsubscribe_url'] =` None
+    parms['unsubscribe_url'] = "http://www.torweather.org/unsubscribe?hmac={}&fingerprint={}".format(verifier.generate(parms['fingerprint']), parms['fingerprint'])
     if not os.environ.get('PROD'):
         parms['email'] = 'torweather@moreorcs.com'
     logger.info('Would email about node %r', dict(parms))
