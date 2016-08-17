@@ -14,15 +14,12 @@ EMAIL_DOWN_BODY = '''
 It appears that the Tor node {{nickname}} (fingerprint: {{fingerprint}}) has been uncontactable through the Tor network for at least 48 hours. You may wish to look at it to see why.
 
 You can find more information about the Tor node at:
-
 https://atlas.torproject.org/#details/{{fingerprint}}
 
 You can unsubscribe from these reports at any time by visiting the following url:
-
-{{unsubscribe_url}}
+http://www.torweather.org/unsubscribe?hmac={{hmac}}&fingerprint={{fingerprint}}
 
 The original Tor Weather was decommissioned by the Tor project and this replacement is now maintained independently. You can learn more here:
-
 https://github.com/thingless/torweather/blob/master/README.md
 '''
 
@@ -30,7 +27,7 @@ email_down_template = template.Template(EMAIL_DOWN_BODY)
 
 def alert_down(node):
     parms = dict(node)
-    parms['unsubscribe_url'] = "http://www.torweather.org/unsubscribe?hmac={}&fingerprint={}".format(verifier.generate(parms['fingerprint']), parms['fingerprint'])
+    parms['hmac'] = verifier.generate(parms['fingerprint'])
     parms['email'] = 'klafter719r@gmail.com'  # TODO XXX FIXME
     logger.info('Emailing node_down %r', parms)
     if os.environ.get('PROD'):
