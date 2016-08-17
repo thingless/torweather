@@ -27,7 +27,7 @@ https://github.com/thingless/torweather/blob/master/README.md
 
 def alert(node):
     if not os.environ.get('PROD'):
-        logger.info('Would email about node %r', node)
+        logger.info('Would email about node %r', dict(node))
         return
 
     return requests.post("https://api.mailgun.net/v3/{}/messages".format(DOMAIN_NAME),
