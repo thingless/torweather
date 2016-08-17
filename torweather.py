@@ -7,6 +7,8 @@ import datetime
 import re
 import os
 
+from mailer import alert
+
 NODE_DOWN_ALERT_TIMEOUT = 24*60*60 #How long to wait before sending node down alert
 
 #import requests
@@ -30,7 +32,7 @@ def scrape_email(text):
 
 def main():
     #get json file
-    if os.environ.get('DEBUG'):
+    if not os.environ.get('PROD'):
         with open('mock_data.json') as data_file:
             data = json.load(data_file)
     else:
