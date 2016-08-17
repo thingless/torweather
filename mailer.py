@@ -5,8 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 DOMAIN_NAME = 'torweather.org'
-API_KEY = ''  # TODO
-
+API_KEY = 'key-b29864d1ebbd7dc163657392e622a063'
 
 EMAIL_DOWN_SUBJECT = '[Tor Weather] Node Down!'
 EMAIL_DOWN_BODY = '''
