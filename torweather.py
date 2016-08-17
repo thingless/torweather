@@ -34,7 +34,7 @@ def main():
     else:
         data = equests.get('https://onionoo.torproject.org/details').json()
     #connect and init db if not inited
-    conn = sqlite3.connect('torweather.db')
+    conn = sqlite3.connect('torweather.db', row_factory=sqlite3.Row)
     try:
         conn.execute("SELECT * FROM nodes;") #if there is not a nodes table this will fail
     except sqlite3.OperationalError:
@@ -75,7 +75,6 @@ def main():
         })
     #find nodes whos down/up state has changed
     published = parse_time_str(data['relays_published'])
-    nodes = conn.execute("SELECT * FROM nodes;")
     for node in conn.execute("SELECT * FROM nodes;"):
         print node
 
