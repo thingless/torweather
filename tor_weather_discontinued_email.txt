@@ -1,0 +1,96 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Dear relay operators,
+
+I learned today that Tor Weather is already offline since May 24 due
+to problems with our hosting company.
+
+We briefly thought about recreating it from backups, but it seems that
+we'd rather spend that effort on other things.
+
+Again, sorry for any inconvenience.
+
+All the best,
+Karsten
+
+
+On 04/04/16 16:48, Karsten Loesing wrote:
+> Dear relay operators,
+> 
+> as of April 4, 2016, Tor Weather has been discontinued.
+> 
+> Tor Weather [0] provided an email notification service to any user
+> who wanted to monitor the status of a Tor node.  Upon subscribing,
+> they could specify what types of alerts they would like to receive.
+> The main purpose of Tor Weather was to notify node operators via
+> email if their node was down for longer than a specified period,
+> but other notification types were available, including one where
+> operators would be informed when their node was around long enough
+> to qualify for a t-shirt.
+> 
+> The main reason for discontinuing Tor Weather is the fact that 
+> software requires maintenance, and Tor Weather is no exception.
+> Tor Weather was promising t-shirts for relays that have not been
+> around long enough or that provided too little bandwidth to be
+> useful to the network, and it was almost impossible to deny a
+> t-shirt after Tor Weather has promised it.  Apart from that, Tor
+> Weather was likely not offering t-shirts to people who have long
+> earned it, thereby confusing them.  An unreliable notification
+> system is worse than not having a system at all.  Relay operators
+> shouldn't rely on Tor Weather to notify them when their relay
+> fails.  They should rather set up their own system instead.
+> 
+> We have tried to find a new maintainer for Tor Weather for years,
+> but without success.  We started rewriting Tor Weather [1] using
+> Onionoo [2] as data back-end in 2014, and even though that project
+> didn't produce working code, somebody could pick up this efforts
+> and finish the rewrite.  The Roster developers said that they're
+> planning to include an email notification function in Roster [3].
+> And we developed a simple Python script that provides information
+> about a relay operator's eligibility for acquiring a t-shirt [4].
+> None of these alternatives is a full replacement of Weather,
+> though.
+> 
+> We encourage you, the community of Tor relay operators, to step up
+> to start your own notification systems and to share designs and
+> code. Tor Weather is still a good idea, it just needs somebody to
+> implement it.
+> 
+> Tor Weather is discontinued in two steps.  For now, new
+> subscriptions are disabled, new welcome messages are not sent out
+> anymore, and existing subscriptions continue working until June 30,
+> 2016.  From July 1, 2016 on, Tor Weather will not be sending out
+> any emails.
+> 
+> Sorry for any inconvenience caused by this.
+> 
+> All the best, Karsten
+> 
+> 
+> [0] https://weather.torproject.org/
+> 
+> [1]
+> https://trac.torproject.org/projects/tor/wiki/doc/weather-in-2014
+> 
+> [2] https://onionoo.torproject.org/
+> 
+> [3] http://www.tor-roster.org/
+> 
+> [4] 
+> https://gitweb.torproject.org/metrics-tasks.git/tree/task-9889/tshirt.py
+>
+> 
+> 
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQEcBAEBAgAGBQJXUEjoAAoJEC3ESO/4X7XBd/4IALwN5pOft2AleZNM2JVEpIcE
+lG+NaGWp+SfbAQ1Y94UEC69Z417/OWLcRk2eBpxEUia8PBschqiJYG39HLOzoet6
+lFbz/l6oxG3dbYpO5Y46TrCt/HlgGUAFuljH4Z9VyGEg4IkW8OgSieg+c/PtKPS6
+/ri0kCfc6MEoK605MexvzUnXTUsi9fk0dRvG49mKNnIe6s+j7PXbJH+QDqvp5KVS
+SFj+C2Zvi19QOXjPcbn5qjb4Bql6htoesDuKbyUIrSI2Tfe0awSkgSYNfc5Xnhqg
+ui8E4SG1wKLHCzWZtkUWnGdq0y74dHqUL+U/aFihKP+eIaq1HpSKBbEntg68AWc=
+=RpHg
+-----END PGP SIGNATURE-----
