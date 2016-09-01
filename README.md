@@ -10,3 +10,23 @@ Unlink the original Tor Weather this project only sends emails for down time to 
 
 ## Running the Source Code
 
+```bash
+# Create the virtualenv
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Common configuration
+DIR=$(dirname $0)
+export MAILGUN_KEY=(your-mailgun-creds)
+export PROD=1
+export UNSUB_KEY=(random-string-for-key)
+export PYTHONPATH=$DIR
+export PORT=8888
+
+# To run the unsubscribe server
+venv/bin/python server.py
+
+# To run the cron job (run every hour)
+venv/bin/python torweather.py
+```
