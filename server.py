@@ -32,7 +32,7 @@ UNSUB_GET_TEMPLATE = tornado.template.Template("""
 <p>Go <a href="/">home</a>?</p>
 """)
 
-UNSUB_GET_TEMPLATE = tornado.template.Template("""
+SUB_GET_TEMPLATE = tornado.template.Template("""
 <h1>TorWeather Email Frequency</h1>
 <p>Update your notification sensitivity.</p>
 <form action="/subscribe" method="POST">
