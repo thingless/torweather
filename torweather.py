@@ -64,6 +64,12 @@ def main():
         logger.info("Creating database table 'unsubscribe'...")
         conn.execute('CREATE TABLE unsubscribe (fingerprint TEXT PRIMARY KEY);')
 
+    try:
+        conn.execute("SELECT COUNT(1) FROM subscribe;")
+    except sqlite3.OperationalError:
+        logger.info("Creating database table 'subscribe'...")
+        conn.execute('CREATE TABLE subscribe (fingerprint TEXT PRIMARY KEY, frequency INTEGER);')
+
     #update or add new records
     with conn:
         logger.info("Updating database of nodes from onionoo data...")
@@ -101,10 +107,14 @@ def main():
     with conn:
         for node in conn.execute("SELECT n.* FROM nodes n "
                                  "LEFT OUTER JOIN unsubscribe u ON u.fingerprint = n.fingerprint "
-                                 "WHERE last_seen < :threshold AND u.fingerprint IS NULL AND "
+                                 "LEFT OUTER JOIN subscribe s ON s.fingerprint = n.fingerprint "
+                                 "WHERE ((s.fingerprint IS NULL AND last_seen < :threshold) OR "
+                                 "last_seen < (:published - s.frequency)) AND "
+                                 "u.fingerprint IS NULL AND "
                                  "n.last_seen > :last_seen_horizon AND "
                                  "n.email IS NOT NULL AND "
                                  "(last_alert_last_seen IS NULL OR last_alert_last_seen <> last_seen);", {
+                                    'published': published,
                                     'threshold': published - NODE_DOWN_ALERT_TIMEOUT,
                                     'last_seen_horizon': LAST_SEEN_HORIZON,
                                 }):
