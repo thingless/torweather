@@ -14,7 +14,7 @@ EMAIL_DOWN_BODY = '''
 It appears that the Tor node {{nickname}} (fingerprint: {{fingerprint}}) has been uncontactable through the Tor network for at least 48 hours. You may wish to look at it to see why.
 
 You can find more information about the Tor node at:
-https://atlas.torproject.org/#details/{{fingerprint}}
+https://metrics.torproject.org/rs.html#details/{{fingerprint}}
 
 You can unsubscribe from these reports at any time by visiting the following url:
 https://www.torweather.org/unsubscribe?hmac={{hmac}}&fingerprint={{fingerprint}}
