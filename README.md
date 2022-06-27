@@ -1,6 +1,6 @@
 # Tor Weather
 
-Tor Weather will inform the user listed in [torrc's](https://www.torproject.org/docs/tor-doc-relay.html.en) `ContactInfo` field via email in the event of downtime lasting longer than 48 hours.
+Tor Weather will inform the user listed in [torrc's](https://support.torproject.org/tbb/tbb-editing-torrc/) `ContactInfo` field via email in the event of downtime lasting longer than 48 hours.
 
 ## Tor Weather's History
 
